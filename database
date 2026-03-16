@@ -1,0 +1,75 @@
+CREATE DATABASE POI_System;
+GO
+
+USE POI_System;
+GO
+  CREATE TABLE Users (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100),
+    email NVARCHAR(100),
+    password NVARCHAR(255),
+    role NVARCHAR(20),
+    created_at DATETIME,
+    updated_at DATETIME
+);   
+CREATE TABLE POI (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(200),
+    latitude FLOAT,
+    longitude FLOAT,
+    priority INT,
+    status NVARCHAR(20),
+    manager_id INT,
+    view_count INT,
+    created_at DATETIME,
+    updated_at DATETIME
+);   
+CREATE TABLE POI_Translation (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    poi_id INT,
+    language NVARCHAR(10),
+    content NVARCHAR(MAX),
+    audio_url NVARCHAR(255),
+    updated_at DATETIME,
+
+    FOREIGN KEY (poi_id) REFERENCES POI(id)
+);
+CREATE TABLE Visit_History (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT,
+    poi_id INT,
+    latitude FLOAT,
+    longitude FLOAT,
+    visit_time DATETIME,
+
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (poi_id) REFERENCES POI(id)
+);
+CREATE TABLE Audio_Listen_History (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT,
+    poi_id INT,
+    language NVARCHAR(10),
+    listen_time DATETIME,
+    duration INT,
+
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (poi_id) REFERENCES POI(id)
+);
+CREATE TABLE User_Location_Log (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT,
+    latitude FLOAT,
+    longitude FLOAT,
+    recorded_at DATETIME,
+
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);
+CREATE TABLE Search_History (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT,
+    keyword NVARCHAR(255),
+    searched_at DATETIME,
+
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);
